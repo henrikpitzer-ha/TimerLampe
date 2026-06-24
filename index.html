@@ -11,6 +11,7 @@
         .btn-connect { background: #007bff; color: white; }
         .btn-start { background: #28a745; color: white; }
         .btn-reset { background: #dc3545; color: white; }
+        .btn-rainbow { background: #6f42c1; color: white; } /* Lila für den Regenbogen */
         .btn-time { background: #17a2b8; color: white; }
         input { width: 90%; padding: 12px; font-size: 16px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; text-align: center; }
         #status { color: #666; margin-bottom: 20px; font-style: italic; font-weight: bold; }
@@ -26,7 +27,8 @@
     <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
     
     <button class="btn-start" onclick="sendBefehl('S')">▶️ Countdown Starten (S)</button>
-    <button class="btn-reset" onclick="sendBefehl('R')">⏹️ Zurücksetzen (R)</button>
+    <button class="btn-rainbow" onclick="sendBefehl('P')">🌈 Regenbogen Effekt (P)</button>
+    <button class="btn-reset" onclick="sendBefehl('R')">⏹️ Zurücksetzen / Aus (R)</button>
     
     <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
     
@@ -36,7 +38,6 @@
 </div>
 
 <script>
-// UUIDs (Wichtig: Auf GitHub müssen sie komplett KLEINGESCHRIEBEN sein!)
 const SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
 const RX_CHARACTERISTIC_UUID = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
 
@@ -47,8 +48,6 @@ async function connectBLE() {
     const statusDiv = document.getElementById('status');
     try {
         statusDiv.innerText = "Suche nach Gerät...";
-        
-        // Optimierter Filter: Wir fordern den Service direkt an
         bleDevice = await navigator.bluetooth.requestDevice({
             filters: [{ name: 'ESP32-C3 Countdown Lampe' }],
             optionalServices: [SERVICE_UUID]
@@ -68,7 +67,6 @@ async function connectBLE() {
         document.getElementById('connectBtn').style.background = "#28a745";
     } catch (error) {
         console.error("Bluetooth Fehler:", error);
-        // Zeigt uns nun den exakten Fehler an, falls es fehlschlägt
         statusDiv.innerText = "❌ Fehler: " + error.message;
     }
 }
